@@ -1,0 +1,12 @@
+# Sample entries appended to /etc/ettercap/etter.dns for the DNS Spoofing
+# scenario (Chapter 5). Only the target domain (and its www subdomain) is
+# redirected to the attacker's IP, so the victim's other DNS resolutions
+# continue to work normally -- keeping the attack covert.
+#
+# Lab-only values: 192.168.0.133 is the Kali attacker VM on the isolated
+# VMnet1 host-only segment (192.168.0.0/24). portal.corp-intranet.com is a
+# fictitious internal hostname created for this lab, not a real domain.
+
+mail.local A 192.168.0.133
+www.portal.corp-intranet.com A 192.168.0.133
+portal.corp-intranet.com A 192.168.0.133

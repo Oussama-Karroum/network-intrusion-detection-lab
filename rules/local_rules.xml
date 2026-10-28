@@ -1,0 +1,110 @@
+<!--
+  Wazuh custom detection rules used in this lab.
+  Source: /var/ossec/etc/rules/local_rules.xml (manager host)
+  Transcribed verbatim from the project report's configuration screenshots.
+  Covers: brute force (SMB/RDP), ARP spoofing, DNS spoofing, EternalBlue/MS17-010.
+-->
+
+<!-- ============================================================= -->
+<!-- Brute force detection and logon-type qualification (Chapter 3) -->
+<!-- ============================================================= -->
+<group name="windows,authentication_monitoring">
+
+  <rule id="100100" level="5">
+    <if_sid>60122</if_sid>
+    <description>Windows Security: Failed authentication attempt for user $(win.eventdata.targetUserName) on $(win.eventdata.computer)</description>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
+    <group>authentication_failed,pci_dss_10.2.4</group>
+  </rule>
+
+  <rule id="100101" level="12" frequency="5" timeframe="30">
+    <if_matched_sid>100100</if_matched_sid>
+    <description>CRITICAL ALERT: Windows Brute Force Attack Detected - High frequency logon failures on $(win.system.computer)</description>
+    <mitre>
+      <id>T1110.001</id>
+    </mitre>
+    <group>authentication_failures,brute_force,pci_dss_11.4</group>
+  </rule>
+
+  <rule id="100102" level="10">
+    <if_sid>60106</if_sid>
+    <field name="win.eventdata.logonType">^3$</field>
+    <description>CRITICAL ALERT: Successful SMB / Network Logon - User $(win.eventdata.targetUserName) connected to $(win.system.computer)</description>
+    <mitre>
+      <id>T1078</id>
+    </mitre>
+    <group>authentication_success,smb_access</group>
+  </rule>
+
+  <rule id="100103" level="10">
+    <if_sid>60106</if_sid>
+    <field name="win.eventdata.logonType">^10$</field>
+    <description>CRITICAL ALERT: Successful RDP Remote Desktop Logon - User $(win.eventdata.targetUserName) connected to $(win.system.computer)</description>
+    <mitre>
+      <id>T1021.001</id>
+    </mitre>
+    <group>authentication_success,rdp_access</group>
+  </rule>
+
+  <rule id="100104" level="7">
+    <if_sid>60106</if_sid>
+    <field name="win.eventdata.logonType">^2$</field>
+    <description>NOTICE: Successful Local Console Logon - User $(win.eventdata.targetUserName) logged in physically on $(win.system.computer)</description>
+    <mitre>
+      <id>T1078</id>
+    </mitre>
+    <group>authentication_success,local_access</group>
+  </rule>
+
+</group>
+
+<!-- ============================================================= -->
+<!-- ARP Poisoning / MITM detection via arpwatch (Chapter 4)        -->
+<!-- ============================================================= -->
+<group name="arpwatch,arp_spoofing,">
+
+  <rule id="100010" level="10">
+    <decoded_as>arpwatch-flipflop</decoded_as>
+    <description>Possible ARP Spoofing / MITM detected: MAC flip-flopping for IP $(srcip)</description>
+    <group>arp_spoofing,mitm,</group>
+  </rule>
+
+  <rule id="100011" level="10">
+    <decoded_as>arpwatch-changed</decoded_as>
+    <description>Possible ARP Spoofing / MITM detected: MAC changed unexpectedly for IP $(srcip)</description>
+    <group>arp_spoofing,mitm,</group>
+  </rule>
+
+</group>
+
+<!-- ============================================================= -->
+<!-- DNS Spoofing detection via custom Scapy script + syslog (Ch.5) -->
+<!-- ============================================================= -->
+<group name="dns_spoof,">
+
+  <rule id="100050" level="12">
+    <match>DNS SPOOFING DETECTED</match>
+    <description>DNS Spoofing Attack Detected - MAC/IP mismatch on gateway DNS response</description>
+    <group>dns_spoof,attack,</group>
+  </rule>
+
+</group>
+
+<!-- ============================================================= -->
+<!-- EternalBlue (MS17-010) detection via Suricata signatures (Ch.6)-->
+<!-- ============================================================= -->
+<group name="local,eternalblue,attack,">
+
+  <rule id="100230" level="12">
+    <if_sid>86601</if_sid>
+    <field name="alert.signature" type="pcre2">(?i)ETERNALBLUE</field>
+    <description>EternalBlue (MS17-010) exploitation attempt: $(src_ip) (attacker) -> $(dest_ip) (victim)</description>
+    <mitre>
+      <id>T1210</id>
+    </mitre>
+    <group>eternalblue,attack,</group>
+  </rule>
+
+</group>

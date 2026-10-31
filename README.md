@@ -8,7 +8,7 @@
 
 A self-contained, virtualized Security Operations Center (SOC) lab built to simulate four realistic network attack scenarios — **brute force, ARP Poisoning, DNS Spoofing, and EternalBlue (MS17-010)** — and validate their detection using the **Wazuh SIEM platform**, custom detection rules, and a network IDS (**Suricata**).
 
-This repository documents an initiation internship project completed at **CHU Hassan II (Fès)**, within the Communication Systems and Information Security Engineering program (GSCSI) at **ENSA Fès**. The original work is an academic report; this README re-presents it as technical project documentation.
+This repository documents an initiation internship project completed at **a public university hospital's IT security department**, as part of an engineering program in Communication Systems and Information Security. The original work is an academic report; this README re-presents it as technical project documentation.
 
 **What this project demonstrates:**
 - Deploying and operating a Wazuh SIEM stack (Manager, Indexer, Dashboard) in single-node mode
@@ -50,7 +50,7 @@ This repository documents an initiation internship project completed at **CHU Ha
 
 ### Background and context
 
-Network intrusion detection is a core SOC function: raw logs and network traffic are only useful if they are centralized, correlated, and turned into actionable alerts. This project was carried out as an initiation internship at the IT security department of **CHU Hassan II**, a public university hospital, where protecting the confidentiality and availability of clinical information systems is a stated priority.
+Network intrusion detection is a core SOC function: raw logs and network traffic are only useful if they are centralized, correlated, and turned into actionable alerts. This project was carried out as an initiation internship at the IT security department of **a public university hospital**, where protecting the confidentiality and availability of clinical information systems is a stated priority.
 
 ### Problem addressed
 
@@ -670,7 +670,7 @@ This project involves offensive tooling and credential-handling screenshots. Bef
 - **Flagged for review — DNS spoofing captured-credentials screenshot** (`dns-spoof-captured-credentials.png`): shows intercepted login credentials. These are self-created, lab-only demo credentials (`admin` / `admin123`), not real accounts — but confirm before publishing, since the image format resembles a real credential leak.
 - **No real secrets were found** in the Wazuh install summary, Thunderbird configuration, `ossec.conf`, or any Suricata/rule screenshots reviewed — passwords in those views are either masked in the original report or are the same lab-only demo values already disclosed in the narrative text (e.g., `password123`).
 - **IP addresses and hostnames** throughout this repo (`192.168.0.0/24`, `192.168.0.133`, `192.168.0.140`, `192.168.0.158`, `USER-PC`, `portal.corp-intranet.com`) are all private, lab-internal, or fictitious values — safe to publish as-is.
-- **Institutional context:** the host organization (CHU Hassan II) and supervisor names appear in the original report's title page and acknowledgments. Decide whether to keep that attribution in a public README or generalize it (e.g., "a university hospital IT security department") — this is a personal/professional judgment call, not a technical one.
+- **Institutional context:** the host organization's name, the academic institution's name, and any supervisor/professor names (present in the original report's title page and acknowledgments) have been fully generalized or omitted in this README. Only the author's own name is retained.
 - **Responsible use:** all attacks were conducted in an isolated, authorized lab network with no production systems involved. If you reproduce this lab, do the same — never run these tools against networks or systems you don't own or have explicit authorization to test.
 - **Credential/secret hygiene for reproduction:** if you redeploy `dns_spoof_detector.py` or the Wazuh rules, update the hardcoded lab values (gateway IP/MAC, etc.) to match your own environment — don't reuse this lab's values as if they were generic defaults.
 
